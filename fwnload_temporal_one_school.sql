@@ -189,12 +189,7 @@ FROM
     dbo.Audit_School
 ;
 GO
- 
---- The results - The chanage has been recorded in this history table with a tovalid datetime.
---  Note that the SchoolRole value is the older one. The actual value is now 435
-pkey_School SchoolName                                SchoolRole fromvalid                   tovalid
------------ ---------------------------------------- ----------- --------------------------- ---------------------------
-          1 Saint George                                     432 1900-01-01 00:00:00.000     2018-01-06 20:50:09.778
+
  
 -- Now update the main record again
 UPDATE dbo.School
