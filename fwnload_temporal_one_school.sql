@@ -232,3 +232,72 @@ GO
 -- indicating that the value of 435 was valid up to the point where we changed the role to 436.
 
 
+-- How about inserts?
+-- Add a new school record
+INSERT dbo.School 
+(
+pkey_School,
+SchoolName,
+SchoolDistrict,
+SchoolRegion,
+SchoolCountry,
+SchoolRole
+)
+VALUES
+(
+25,
+'St. Elswehere',
+'D9',
+'R5',
+'Scotland',
+23
+)
+;
+GO
+
+
+SELECT * FROM dbo.School
+WHERE 
+	pkey_School = 25
+;
+GO
+-- Our new school is inserted
+pkey_School SchoolName                               SchoolDistrict SchoolRegion SchoolCountry  SchoolRole
+----------- ---------------------------------------- -------------- ------------ ------------- -----------
+         25 St. Elswehere                            D9             R5           Scotland               23
+
+-- Check the Audit Table
+SELECT
+    pkey_School ,
+    SchoolName,
+    SchoolRole  ,
+    fromvalid   ,
+    tovalid
+
+FROM
+    dbo.Audit_School
+;
+GO
+-- No sign of our new record.
+pkey_School SchoolName                                SchoolRole fromvalid                   tovalid
+----------- ---------------------------------------- ----------- --------------------------- ---------------------------
+          1 Saint George                                     432 1900-01-01 00:00:00.000     2018-01-06 20:50:09.778
+          1 Saint George                                     435 2018-01-06 20:50:09.778     2018-01-06 20:58:31.212
+
+-- It will only show in the Audit Table, if we modify or delete the parent record 
+DELETE FROM dbo.School
+WHERE 
+	pkey_School = 25
+;
+GO
+
+SELECT * FROM  dbo.Audit_School
+;
+GO
+ 
+pkey_School SchoolName                               SchoolDistrict SchoolRegion SchoolCountry  SchoolRole fromvalid                   tovalid
+----------- ---------------------------------------- -------------- ------------ ------------- ----------- --------------------------- ---------------------------
+          1 Saint George                             D1             R1           England               432 1900-01-01 00:00:00.000     2018-01-06 20:50:09.778
+          1 Saint George                             D1             R1           England               435 2018-01-06 20:50:09.778     2018-01-06 20:58:31.212
+         25 St. Elswehere                            D9             R5           Scotland               23 2018-01-14 10:16:18.542     2018-01-14 10:21:29.477
+
